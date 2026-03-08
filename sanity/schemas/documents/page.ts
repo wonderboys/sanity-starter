@@ -7,8 +7,8 @@ export const pageSchema = defineType({
   title: 'Page',
   type: 'document',
   groups: [
-    { name: 'admin', title: 'Admin', default: true },
-    { name: 'pageHeader', title: 'Page Header' },
+    { name: 'admin', title: 'Admin' },
+    { name: 'header', title: 'Page Header' },
     { name: 'content', title: 'Content' },
     { name: 'seo', title: 'SEO' }
   ],
@@ -72,39 +72,39 @@ export const pageSchema = defineType({
       name: 'showPageHeader',
       title: 'Show Page Header',
       type: 'boolean',
-      group: 'pageHeader',
+      group: 'header',
       initialValue: true
     }),
     defineField({
       name: 'eyebrow',
       title: 'Eyebrow',
       type: 'string',
-      group: 'pageHeader'
+      group: 'header'
     }),
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
-      group: 'pageHeader'
+      group: 'header'
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 3,
-      group: 'pageHeader'
+      group: 'header'
     }),
     defineField({
       name: 'heroImage',
       title: 'Hero Image',
       type: 'imageWithAlt',
-      group: 'pageHeader'
+      group: 'header'
     }),
     defineField({
-      name: 'seo',
-      title: 'SEO',
-      type: 'seoFields',
-      group: 'seo'
+      name: 'body',
+      title: 'Body',
+      type: 'richText',
+      group: 'content'
     }),
     defineField({
       name: 'pageComponents',
@@ -119,8 +119,28 @@ export const pageSchema = defineType({
         { type: 'cardsSection' },
         { type: 'accordion' },
         { type: 'embed' },
-        { type: 'contactBlock' }
+        { type: 'contactBlock' },
+        { type: 'postsTeaserBlock' }
       ]
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seoFields',
+      group: 'seo'
     })
-  ]
+  ],
+  preview: {
+    select: {
+      internalTitle: 'internalTitle',
+      title: 'title',
+      slug: 'slug.current'
+    },
+    prepare({ internalTitle, title, slug }) {
+      return {
+        title: internalTitle || title || 'Untitled page',
+        subtitle: slug ? `/${slug}` : undefined
+      };
+    }
+  }
 });

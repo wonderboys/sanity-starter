@@ -9,6 +9,7 @@ import { ContactBlock } from '@/components/blocks/ContactBlock';
 import { EmbedBlock } from '@/components/blocks/EmbedBlock';
 import { HeroBlock } from '@/components/blocks/HeroBlock';
 import { ImageSectionBlock } from '@/components/blocks/ImageSectionBlock';
+import { PostsTeaserBlock } from '@/components/blocks/PostsTeaserBlock';
 import { TextSectionBlock } from '@/components/blocks/TextSectionBlock';
 
 type PageComponentValue = {
@@ -26,7 +27,8 @@ const pageComponentMap: Record<string, GenericBlockComponent> = {
   cardsSection: CardsSectionBlock as unknown as GenericBlockComponent,
   accordion: AccordionBlock as unknown as GenericBlockComponent,
   embed: EmbedBlock as unknown as GenericBlockComponent,
-  contactBlock: ContactBlock as unknown as GenericBlockComponent
+  contactBlock: ContactBlock as unknown as GenericBlockComponent,
+  postsTeaserBlock: PostsTeaserBlock as unknown as GenericBlockComponent
 };
 
 export function renderPageComponent(component: PageComponentValue, index: number): ReactNode {

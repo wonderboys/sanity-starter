@@ -1,100 +1,53 @@
-import Link from 'next/link';
-import { PortableText } from '@portabletext/react';
-
-import { portableTextComponents } from '@/lib/portableText';
+import { ContactCard, type ContactCardValue } from '@/components/blocks/ContactCard';
 
 type ContactBlockValue = {
   title?: string;
-  body?: unknown;
-  contactName?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  ctas?: Array<{
-    text?: string;
-    link?: {
-      externalUrl?: string;
-      internalReference?: {
-        slug?: {
-          current?: string;
-        };
-      };
-      newTab?: boolean;
-    };
-    variant?: 'primary' | 'secondary' | 'ghost' | 'link';
-  }>;
+  contacts?: ContactCardValue[];
+  categoryContacts?: ContactCardValue[];
+  contactCategory?: string;
+  layout?: 'stacked' | 'grid';
+  showRole?: boolean;
+  showImage?: boolean;
 };
 
+function sortContacts(contacts: ContactCardValue[]) {
+  return [...contacts].sort((left, right) => {
+    const leftSort = typeof left.sortOrder === 'number' ? left.sortOrder : Number.MAX_SAFE_INTEGER;
+    const rightSort = typeof right.sortOrder === 'number' ? right.sortOrder : Number.MAX_SAFE_INTEGER;
+
+    if (leftSort !== rightSort) {
+      return leftSort - rightSort;
+    }
+
+    return (left.name ?? '').localeCompare(right.name ?? '');
+  });
+}
+
 export function ContactBlock({ value }: { value: ContactBlockValue }) {
+  // Priority: manual references first, then category-based results, otherwise no cards.
+  const selectedContacts = value.contacts?.length
+    ? sortContacts(value.contacts)
+    : value.contactCategory && value.categoryContacts?.length
+      ? sortContacts(value.categoryContacts)
+      : [];
+
+  const contactGridClass = value.layout === 'grid' ? 'grid gap-6 sm:grid-cols-2' : 'grid gap-6';
+
   return (
     <section className="mx-auto max-w-5xl px-6 py-12">
       {value.title ? <h2 className="text-3xl font-semibold text-slate-950">{value.title}</h2> : null}
-      <div className="mt-5 grid gap-8 md:grid-cols-2">
-        <div>
-          {value.body ? (
-            <PortableText
-              value={value.body as Parameters<typeof PortableText>[0]['value']}
-              components={portableTextComponents}
+      {selectedContacts.length ? (
+        <div className={value.title ? `mt-5 ${contactGridClass}` : contactGridClass}>
+          {selectedContacts.map((contact, index) => (
+            <ContactCard
+              key={contact._id || contact._key || `${contact.name ?? 'contact'}-${index}`}
+              contact={contact}
+              showImage={value.showImage !== false}
+              showRole={value.showRole !== false}
             />
-          ) : null}
-
-          {value.ctas?.length ? (
-            <div className="mt-6 flex flex-wrap gap-3">
-              {value.ctas.map((cta, index) => {
-                const href =
-                  cta.link?.externalUrl ||
-                  (cta.link?.internalReference?.slug?.current
-                    ? `/${cta.link.internalReference.slug.current}`
-                    : null);
-
-                if (!href || !cta.text) {
-                  return null;
-                }
-
-                const variantClass =
-                  cta.variant === 'secondary'
-                    ? 'bg-slate-700 text-white hover:bg-slate-600'
-                    : cta.variant === 'ghost'
-                      ? 'border border-slate-300 bg-transparent text-slate-900 hover:bg-slate-200'
-                      : cta.variant === 'link'
-                        ? 'bg-transparent p-0 text-slate-900 underline hover:text-slate-700'
-                        : 'bg-slate-900 text-white hover:bg-slate-800';
-
-                return (
-                  <Link
-                    key={`${href}-${index}`}
-                    href={href}
-                    target={cta.link?.newTab ? '_blank' : undefined}
-                    rel={cta.link?.newTab && cta.link?.externalUrl ? 'noopener noreferrer' : undefined}
-                    className={`inline-flex items-center rounded-md px-4 py-2 ${variantClass}`}
-                  >
-                    {cta.text}
-                  </Link>
-                );
-              })}
-            </div>
-          ) : null}
+          ))}
         </div>
-
-        <address className="not-italic text-slate-800">
-          {value.contactName ? <p className="font-semibold text-slate-950">{value.contactName}</p> : null}
-          {value.email ? (
-            <p className="mt-2">
-              <a href={`mailto:${value.email}`} className="underline underline-offset-2 hover:text-slate-700">
-                {value.email}
-              </a>
-            </p>
-          ) : null}
-          {value.phone ? (
-            <p className="mt-2">
-              <a href={`tel:${value.phone}`} className="underline underline-offset-2 hover:text-slate-700">
-                {value.phone}
-              </a>
-            </p>
-          ) : null}
-          {value.address ? <p className="mt-2 whitespace-pre-line">{value.address}</p> : null}
-        </address>
-      </div>
+      ) : null}
     </section>
   );
 }

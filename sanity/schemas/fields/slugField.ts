@@ -4,7 +4,7 @@ type SlugFieldOptions = {
   source?: string;
   name?: string;
   title?: string;
-  group?: string;
+  group?: string | string[];
 };
 
 function toUrlSlug(input: string) {

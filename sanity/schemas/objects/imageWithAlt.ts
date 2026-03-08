@@ -5,8 +5,7 @@ export const imageWithAltFields = [
     name: 'image',
     title: 'Image',
     type: 'image',
-    options: { hotspot: true },
-    validation: (rule) => rule.required()
+    options: { hotspot: true }
   }),
   defineField({
     name: 'alt',
@@ -14,9 +13,10 @@ export const imageWithAltFields = [
     type: 'string',
     validation: (rule) =>
       rule.custom((value, context) => {
+        const image = (context.parent as { image?: unknown } | undefined)?.image;
         const decorative = (context.parent as { decorative?: boolean } | undefined)?.decorative;
 
-        if (!decorative && !value) {
+        if (image && !decorative && !value) {
           return 'Alt text is required unless the image is decorative.';
         }
 

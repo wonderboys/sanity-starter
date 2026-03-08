@@ -2,6 +2,7 @@ import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { ImageSection } from '@/components/ImageSection';
+import { PortableTextSection } from '@/components/PortableTextSection';
 import { buildMetadata } from '@/lib/metadata';
 import { renderPageComponent } from '@/lib/pageComponents';
 import { sanityClient } from '@/lib/sanity.client';
@@ -25,6 +26,7 @@ type PageData = {
   title?: string;
   description?: string;
   eyebrow?: string;
+  body?: unknown;
   showPageHeader?: boolean;
   heroImage?: ImageWithAlt;
   seo?: {
@@ -105,6 +107,7 @@ export default async function HomePage() {
           </>
         ) : null}
 
+        {page.body ? <PortableTextSection value={page.body} /> : null}
         {page.pageComponents?.map((component, index) => renderPageComponent(component, index))}
       </main>
       <Footer />

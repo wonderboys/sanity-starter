@@ -1,6 +1,8 @@
 import { type SchemaTypeDefinition } from 'sanity';
 
+import { contactSchema } from './schemas/documents/contact';
 import { pageSchema } from './schemas/documents/page';
+import { postSchema } from './schemas/documents/post';
 import { accordionBlockSchema } from './schemas/blocks/accordion';
 import { callToActionBlockSchema } from './schemas/blocks/callToAction';
 import { cardsSectionBlockSchema } from './schemas/blocks/cardsSection';
@@ -8,6 +10,7 @@ import { contactBlockSchema } from './schemas/blocks/contactBlock';
 import { embedBlockSchema } from './schemas/blocks/embed';
 import { heroBlockSchema } from './schemas/blocks/hero';
 import { imageSectionBlockSchema } from './schemas/blocks/imageSection';
+import { postsTeaserBlockSchema } from './schemas/blocks/postsTeaserBlock';
 import { richTextSchema } from './schemas/blocks/richText';
 import { richTextImageSchema } from './schemas/blocks/richTextImage';
 import { richTextTableSchema } from './schemas/blocks/richTextTable';
@@ -26,6 +29,8 @@ import { siteSettingsSchema } from './schemas/settings/siteSettings';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   pageSchema,
+  contactSchema,
+  postSchema,
   heroBlockSchema,
   textSectionBlockSchema,
   imageSectionBlockSchema,
@@ -34,6 +39,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   accordionBlockSchema,
   embedBlockSchema,
   contactBlockSchema,
+  postsTeaserBlockSchema,
   richTextSchema,
   richTextImageSchema,
   richTextTableSchema,
